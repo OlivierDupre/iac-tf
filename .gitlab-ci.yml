@@ -1,0 +1,42 @@
+stages:
+  - environments
+
+.environment:
+  stage: environments
+  variables:
+    TF_ROOT: terraform
+    TF_CLI_ARGS_plan: "-var-file=../vars/$variables_file.tfvars"
+  trigger:
+    include: .gitlab-ci/.gitlab-ci.yml
+    strategy: depend            # Wait for the triggered pipeline to successfully complete
+    forward:
+      yaml_variables: true      # Forward variables defined in the trigger job
+      pipeline_variables: true  # Forward manual pipeline variables and scheduled pipeline variables
+
+review:
+  extends: .environment
+  variables:
+    environment: review/$CI_COMMIT_REF_SLUG
+    TF_STATE_NAME: $CI_COMMIT_REF_SLUG
+    variables_file: review
+    TF_VAR_aws_resources_name: $CI_COMMIT_REF_SLUG  # Used in the tag Name of the resources deployed, to easily differenciate them
+  rules:
+    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+
+integration:
+  extends: .environment
+  variables:
+    environment: integration
+    TF_STATE_NAME: $environment
+    variables_file: $environment
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+prex:
+  extends: .environment
+  variables:
+    environment: prex
+    TF_STATE_NAME: prex
+    variables_file: $environment
+  rules:
+    - if: $CI_COMMIT_TAG
