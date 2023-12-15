@@ -140,10 +140,10 @@ destroy_review:
       yaml_variables: true      # Forward variables defined in the trigger job
       pipeline_variables: true  # Forward manual pipeline variables and scheduled pipeline variables
 
-recette:
+qa:
   extends: .2nd_layer
   variables:
-    TF_STATE_NAME_2: recette
+    TF_STATE_NAME_2: qa
     environment: $TF_STATE_NAME_2
     TF_CLI_ARGS_plan_2: "-var-file=../vars/$TF_STATE_NAME_2.tfvars"
   rules:
