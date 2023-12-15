@@ -36,11 +36,11 @@ integration:
     variables_file: "$environment"
   rules:
   - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
-prex:
+staging:
   extends: ".environment"
   variables:
-    environment: prex
-    TF_STATE_NAME: prex
+    environment: staging
+    TF_STATE_NAME: staging
     variables_file: "$environment"
   rules:
   - if: "$CI_COMMIT_TAG"
