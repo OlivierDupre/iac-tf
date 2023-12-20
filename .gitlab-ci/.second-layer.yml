@@ -1,0 +1,69 @@
+# Use to deploy a second environment on both the default branch and the tags.
+
+include:
+  template: Terraform.latest.gitlab-ci.yml
+
+stages:
+  - validate
+  - test
+  - build
+  - deploy
+
+fmt:
+  rules:
+    - when: always
+
+validate:
+  rules:
+    - when: always
+
+kics-iac-sast:
+  rules:
+    - if: $SAST_DISABLED == 'true' || $SAST_DISABLED == '1'
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /kics/
+      when: never
+    - when: never
+
+###########################################################################################################
+## Recette env. and Prod. env
+##  * Manually trigger build and auto-deploy in Recette
+##  * Manually trigger both build and deploy in Production
+##  * Destroy of these env. is not automated to prevent errors.
+###########################################################################################################
+build:  # terraform plan
+  cache:  # Use a shared cache or tagged runners to ensure terraform can run on apply and destroy
+    - key: $TF_STATE_NAME_2
+      fallback_keys:
+        - cache-$CI_DEFAULT_BRANCH
+      paths:
+        - .
+  environment:
+    name: $TF_STATE_NAME_2
+    action: prepare
+  before_script:  # Hack to set new variable values on the second layer, while still using the same variable names. Otherwise, due to variable precedence order, setting new value in the trigger job, does not cascade these new values to the downstream pipeline
+    - TF_STATE_NAME=$TF_STATE_NAME_2
+    - TF_CLI_ARGS_plan=$TF_CLI_ARGS_plan_2
+  rules:
+    - when: manual
+
+deploy: # terraform apply
+  cache:  # Use a shared cache or tagged runners to ensure terraform can run on apply and destroy
+    - key: $TF_STATE_NAME_2
+      fallback_keys:
+        - cache-$CI_DEFAULT_BRANCH
+      paths:
+        - .
+  environment: 
+    name: $TF_STATE_NAME_2
+    action: start
+  before_script:  # Hack to set new variable values on the second layer, while still using the same variable names. Otherwise, due to variable precedence order, setting new value in the trigger job, does not cascade these new values to the downstream pipeline
+    - TF_STATE_NAME=$TF_STATE_NAME_2
+    - TF_CLI_ARGS_plan=$TF_CLI_ARGS_plan_2
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG && $TF_AUTO_DEPLOY == "true"
+    - if: $CI_COMMIT_TAG
+      when: manual
+###########################################################################################################
+
