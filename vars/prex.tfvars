@@ -1,5 +1,0 @@
-aws_vpc_cidr = "10.220.0.0/16"
-aws_public_subnet_cidr = "10.220.1.0/24"
-aws_private_subnet_cidr = "10.220.2.0/24"
-aws_instance_type = "t3.medium"
-aws_resources_name = "prex"
