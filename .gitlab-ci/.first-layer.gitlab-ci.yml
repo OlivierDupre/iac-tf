@@ -134,7 +134,7 @@ destroy_review:
   variables:
     TF_ROOT: terraform
   trigger:
-    include: .gitlab-ci/.second-layer.yml
+    include: .gitlab-ci/.second-layer.gitlab-ci.yml
     # strategy: depend            # Do NOT wait for the downstream pipeline to finish to mark upstream pipeline as successful. Otherwise, all pipelines will fail when reaching the pipeline timeout before deployment to 2nd layer.
     forward:
       yaml_variables: true      # Forward variables defined in the trigger job
