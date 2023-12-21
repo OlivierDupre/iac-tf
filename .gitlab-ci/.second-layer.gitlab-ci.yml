@@ -1,7 +1,6 @@
 # Use to deploy a second environment on both the default branch and the tags.
-
 include:
-  template: Terraform.latest.gitlab-ci.yml
+  template: Terraform.gitlab-ci.yml
 
 stages:
   - validate
@@ -23,7 +22,7 @@ kics-iac-sast:
       when: never
     - if: $SAST_EXCLUDED_ANALYZERS =~ /kics/
       when: never
-    - when: never
+    - when: always
 
 ###########################################################################################################
 ## Recette env. and Prod. env

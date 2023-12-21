@@ -4,7 +4,7 @@ variables:
   TF_VAR_aws_default_region: $AWS_DEFAULT_REGION
 
 include:
-  template: Terraform.latest.gitlab-ci.yml
+  template: Terraform.gitlab-ci.yml
 
 default:
   cache:  # Use a shared cache or tagged runners to ensure terraform can run on apply and destroy
@@ -36,7 +36,7 @@ kics-iac-sast:
       when: never
     - if: $SAST_EXCLUDED_ANALYZERS =~ /kics/
       when: never
-    - when: never
+    - when: always
 
 ###########################################################################################################
 ## Integration env. and Prex. env
