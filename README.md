@@ -8,13 +8,6 @@ Provision Infrastructure using Terraform and GitLab CI.
 
 The diagram below shows a high level view of the workflow being implemented in this project.
 
-Legend:
-
-* Rounded boxes are the GitLab branches.
-* Square boxes are the environments.
-* Text on the arrows are the actions to flow from one box to the next one.
-* Angled square is a decision step.
-
 ```mermaid
 flowchart LR
     A(main) -->|new feature| B(feature_X)
@@ -24,15 +17,22 @@ flowchart LR
     C -->|destroy| D
 
     D -->|auto deploy| E[integration]
-    E -->|manual| F[recette]
+    E -->|manual| F[qa]
 
     D -->|tag| G(X.Y.Z)
     F -->|validate| G
 
-    G -->|auto deploy| H[prex]
+    G -->|auto deploy| H[staging]
     H -->|manual| I{plan}
     I -->|manual| J[production]
 ``````
+
+Legend:
+
+* Rounded boxes are the GitLab branches.
+* Square boxes are the environments.
+* Text on the arrows are the actions to flow from one box to the next one.
+* Angled square is a decision step.
 
 ### Review
 
