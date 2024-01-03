@@ -52,3 +52,12 @@ resource "aws_s3_bucket_public_access_block" "publicaccess" {
   block_public_acls = false
   block_public_policy = false
 }
+
+resource "aws_s3_bucket" "data" {
+  # bucket is public
+  # bucket is not encrypted
+  # bucket does not have access logs
+  # bucket does not have versioning
+  bucket        = "${local.resource_prefix.value}-data"
+  force_destroy = true
+}
