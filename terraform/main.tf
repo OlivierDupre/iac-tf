@@ -39,3 +39,16 @@ resource "aws_instance" "sandbox" {
     Pipeline = var.aws_ec2_tags
   }
 }
+
+# Create the bucket
+resource "aws_s3_bucket" "demobucket" {
+  bucket = "terraformdemobucket"
+  acl = "private"
+}
+
+# Grant bucket access: public
+resource "aws_s3_bucket_public_access_block" "publicaccess" {
+  bucket = aws_s3_bucket.demobucket.id
+  block_public_acls = false
+  block_public_policy = false
+}
