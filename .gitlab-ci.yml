@@ -8,6 +8,7 @@
 stages:
 - environments
 - test
+
 ".environment":
   stage: environments
   variables:
@@ -19,6 +20,7 @@ stages:
     forward:
       yaml_variables: true
       pipeline_variables: true
+      
 review:
   extends: ".environment"
   variables:
@@ -28,6 +30,7 @@ review:
     TF_VAR_aws_resources_name: "$CI_COMMIT_REF_SLUG"
   rules:
   - if: "$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH"
+
 integration:
   extends: ".environment"
   variables:
@@ -36,6 +39,7 @@ integration:
     variables_file: "$environment"
   rules:
   - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+  
 staging:
   extends: ".environment"
   variables:

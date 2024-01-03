@@ -6,13 +6,12 @@ variables:
 include:
   template: Terraform.gitlab-ci.yml
 
-default:
-  cache:  # Use a shared cache or tagged runners to ensure terraform can run on apply and destroy
-    - key: cache-$CI_COMMIT_REF_SLUG
-      fallback_keys:
-        - cache-$CI_DEFAULT_BRANCH
-      paths:
-        - .
+cache:  # Use a shared cache or tagged runners to ensure terraform can run on apply and destroy
+  - key: cache-$CI_COMMIT_REF_SLUG
+    fallback_keys:
+      - cache-$CI_DEFAULT_BRANCH
+    paths:
+      - .
 
 stages:
   - validate
