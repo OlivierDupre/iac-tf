@@ -66,9 +66,10 @@ staging:
   - if: "$CI_COMMIT_TAG"
 
 #### TWEAK
-# This tweak is needed to display to Merge widgets.
-# As soon as this issue: https://gitlab.com/gitlab-org/gitlab/-/issues/439700 is resolved, the `include` and `kics-iac-sast` instructions can be removed.
-# Until then, the SAST IaC scanners will run in the downstream pipelines, but their results will not be available directly in the Merge Request view, making it harder to track them.
+# This tweak is needed to display vulnerability results in the Merge widgets.
+# As soon as this issue: https://gitlab.com/gitlab-org/gitlab/-/issues/439700 is resolved, the `include` instruction below can be removed.
+# Until then, the SAST IaC scanners will run in the downstream pipelines, but their results will not be available directly in the Merge Request widget, making it harder to track them.
+# Note: This workaround is perfectly safe and will not slow down your pipeline.
 include:
   - template: Security/SAST-IaC.gitlab-ci.yml
 #### END TWEAK
